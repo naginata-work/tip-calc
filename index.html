@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Tip Calculator / チップ計算機</title>
+<meta name="description" content="金額とチップ率を入れるだけ。チップ額・合計・1人あたりの金額を即計算。">
+<script async src="https://pagead2.googlesyndication.com/pagead/js/adsbygoogle.js?client=ca-pub-4214020669195548"
+     crossorigin="anonymous"></script>
+<style>
+  :root {
+    --bg: #14100c; --card: #221a12; --text: #f8f1e6; --sub: #b0a08c;
+    --accent: #f2a65a; --accent2: #6ee7b7; --border: #362a1c;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; font-family: "Hiragino Kaku Gothic ProN", "Segoe UI", Arial, sans-serif;
+    background: var(--bg); color: var(--text); padding: 16px;
+  }
+  .wrap { max-width: 440px; margin: 0 auto; }
+  .top-row { display: flex; justify-content: space-between; align-items: center; margin-bottom: 4px; }
+  .home-link { font-size: 22px; text-decoration: none; line-height: 1; }
+  .lang-btn { background: none; border: 1px solid var(--border); color: var(--sub); border-radius: 6px; padding: 4px 10px; font-size: 12px; cursor: pointer; }
+  h1 { font-size: 21px; text-align: center; margin: 4px 0 4px; }
+  .lead { text-align: center; color: var(--sub); font-size: 13px; margin-bottom: 18px; line-height: 1.6; }
+  .card { background: var(--card); border: 1px solid var(--border); border-radius: 14px; padding: 16px; margin-bottom: 14px; }
+  label { display: block; font-size: 13px; color: var(--sub); margin-bottom: 4px; }
+  input[type="number"] { width: 100%; padding: 10px; font-size: 15px; border: 1px solid var(--border); border-radius: 8px; background: #17110b; color: var(--text); }
+  .field { margin-bottom: 12px; }
+  .tip-presets { display: flex; gap: 8px; margin-bottom: 12px; }
+  .tip-presets button {
+    flex: 1; padding: 9px; border: 1px solid var(--border); border-radius: 8px;
+    background: none; color: var(--sub); font-size: 13px; cursor: pointer;
+  }
+  .tip-presets button.active { background: var(--accent); color: #2b1400; border-color: var(--accent); font-weight: bold; }
+  .row { display: flex; gap: 10px; }
+  .row > div { flex: 1; }
+  .results { margin-top: 14px; }
+  .result-row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 15px; }
+  .result-row:last-child { border-bottom: none; }
+  .result-row .amount { font-weight: bold; color: var(--accent2); }
+  .copy-btn { width: 100%; padding: 11px; border: 1px solid var(--border); border-radius: 10px; font-size: 13.5px; cursor: pointer; background: none; color: var(--text); margin-top: 10px; }
+  .footer-links { text-align: center; font-size: 12px; color: var(--sub); margin-top: 4px; line-height: 1.8; }
+  .footer-links a { color: var(--accent2); text-decoration: none; }
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="top-row"><a href="https://naginata-work.github.io/" class="home-link" title="All tools">🧰</a><button class="lang-btn" id="langBtn">EN</button></div>
+  <h1 id="title">💵 チップ計算機</h1>
+  <p class="lead" id="lead">金額とチップ率を入れるだけ。合計・1人あたりの金額を即計算。</p>
+
+  <div class="card">
+    <div class="field">
+      <label id="billLabel">お会計金額</label>
+      <input type="number" id="bill" value="50" min="0" step="any">
+    </div>
+
+    <label id="tipLabel">チップ率</label>
+    <div class="tip-presets" id="tipPresets"></div>
+    <div class="field">
+      <input type="number" id="customTip" value="18" min="0" max="100">
+    </div>
+
+    <div class="field">
+      <label id="peopleLabel">人数で割る</label>
+      <input type="number" id="people" value="1" min="1">
+    </div>
+
+    <div class="results">
+      <div class="result-row"><span id="tipAmountLabel"></span><span class="amount" id="tipAmount">-</span></div>
+      <div class="result-row"><span id="totalLabel"></span><span class="amount" id="total">-</span></div>
+      <div class="result-row"><span id="perPersonLabel"></span><span class="amount" id="perPerson">-</span></div>
+    </div>
+    <button class="copy-btn" id="copyBtn"></button>
+  </div>
+
+  <p class="footer-links" id="footerLinks"></p>
+</div>
+
+<script>
+  const TIP_PRESETS = [10, 15, 18, 20, 25];
+
+  const I18N = {
+    ja: {
+      title: '💵 チップ計算機',
+      lead: '金額とチップ率を入れるだけ。合計・1人あたりの金額を即計算。',
+      billLabel: 'お会計金額',
+      tipLabel: 'チップ率',
+      peopleLabel: '人数で割る',
+      tipAmountLabel: 'チップ額',
+      totalLabel: '合計金額',
+      perPersonLabel: '1人あたり',
+      copyBtn: '結果をコピー',
+      copied: 'コピーしました!',
+      shareText: (tip, total, per) => `チップ: ${tip} / 合計: ${total} / 1人あたり: ${per}`,
+      footerLinks: '他のツールも作っています → <a href="https://naginata-work.github.io/warikan-tool/" target="_blank" rel="noopener">割り勘計算機</a> / <a href="https://naginata-work.github.io/percent-calc/" target="_blank" rel="noopener">パーセント計算機</a>'
+    },
+    en: {
+      title: '💵 Tip Calculator',
+      lead: 'Enter the bill and tip percentage to instantly get the total and per-person split.',
+      billLabel: 'Bill amount',
+      tipLabel: 'Tip percentage',
+      peopleLabel: 'Split between',
+      tipAmountLabel: 'Tip amount',
+      totalLabel: 'Total',
+      perPersonLabel: 'Per person',
+      copyBtn: 'Copy result',
+      copied: 'Copied!',
+      shareText: (tip, total, per) => `Tip: ${tip} / Total: ${total} / Per person: ${per}`,
+      footerLinks: 'Also made these → <a href="https://naginata-work.github.io/warikan-tool/" target="_blank" rel="noopener">Bill Splitter</a> / <a href="https://naginata-work.github.io/percent-calc/" target="_blank" rel="noopener">Percentage Calculator</a>'
+    }
+  };
+
+  function loadLang() { try { return localStorage.getItem('tipCalcLang'); } catch (e) { return null; } }
+  function saveLang(l) { try { localStorage.setItem('tipCalcLang', l); } catch (e) {} }
+  let lang = loadLang() === 'en' ? 'en' : 'ja';
+  function t() { return I18N[lang]; }
+
+  function renderPresets() {
+    const container = document.getElementById('tipPresets');
+    const current = parseFloat(document.getElementById('customTip').value);
+    container.innerHTML = '';
+    TIP_PRESETS.forEach(p => {
+      const btn = document.createElement('button');
+      btn.textContent = p + '%';
+      if (p === current) btn.classList.add('active');
+      btn.addEventListener('click', () => {
+        document.getElementById('customTip').value = p;
+        calc();
+      });
+      container.appendChild(btn);
+    });
+  }
+
+  let lastResult = null;
+
+  function fmt(n) {
+    return (Math.round(n * 100) / 100).toLocaleString(undefined, { minimumFractionDigits: 2, maximumFractionDigits: 2 });
+  }
+
+  function calc() {
+    const bill = parseFloat(document.getElementById('bill').value);
+    const tipPct = parseFloat(document.getElementById('customTip').value);
+    const people = Math.max(1, parseInt(document.getElementById('people').value, 10) || 1);
+    renderPresets();
+    if (isNaN(bill) || bill < 0 || isNaN(tipPct)) {
+      document.getElementById('tipAmount').textContent = '-';
+      document.getElementById('total').textContent = '-';
+      document.getElementById('perPerson').textContent = '-';
+      lastResult = null;
+      return;
+    }
+    const tip = bill * tipPct / 100;
+    const total = bill + tip;
+    const perPerson = total / people;
+    lastResult = { tip: fmt(tip), total: fmt(total), perPerson: fmt(perPerson) };
+    document.getElementById('tipAmount').textContent = lastResult.tip;
+    document.getElementById('total').textContent = lastResult.total;
+    document.getElementById('perPerson').textContent = lastResult.perPerson;
+  }
+
+  document.getElementById('bill').addEventListener('input', calc);
+  document.getElementById('customTip').addEventListener('input', calc);
+  document.getElementById('people').addEventListener('input', calc);
+
+  document.getElementById('copyBtn').addEventListener('click', async () => {
+    if (!lastResult) return;
+    const text = t().shareText(lastResult.tip, lastResult.total, lastResult.perPerson) + ' ' + location.href;
+    try {
+      await navigator.clipboard.writeText(text);
+      const btn = document.getElementById('copyBtn');
+      const original = btn.textContent;
+      btn.textContent = t().copied;
+      setTimeout(() => { btn.textContent = original; }, 1500);
+    } catch { alert(text); }
+  });
+
+  function renderStaticText() {
+    document.getElementById('title').textContent = t().title;
+    document.getElementById('lead').textContent = t().lead;
+    document.getElementById('billLabel').textContent = t().billLabel;
+    document.getElementById('tipLabel').textContent = t().tipLabel;
+    document.getElementById('peopleLabel').textContent = t().peopleLabel;
+    document.getElementById('tipAmountLabel').textContent = t().tipAmountLabel;
+    document.getElementById('totalLabel').textContent = t().totalLabel;
+    document.getElementById('perPersonLabel').textContent = t().perPersonLabel;
+    document.getElementById('copyBtn').textContent = t().copyBtn;
+    document.getElementById('footerLinks').innerHTML = t().footerLinks;
+    calc();
+  }
+
+  document.getElementById('langBtn').addEventListener('click', () => {
+    lang = lang === 'ja' ? 'en' : 'ja';
+    saveLang(lang);
+    document.getElementById('langBtn').textContent = lang === 'ja' ? 'EN' : 'JA';
+    renderStaticText();
+  });
+
+  document.getElementById('langBtn').textContent = lang === 'ja' ? 'EN' : 'JA';
+  renderStaticText();
+</script>
+</body>
+</html>
