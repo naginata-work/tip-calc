@@ -75,7 +75,25 @@
     <button class="copy-btn" id="copyBtn"></button>
   </div>
 
+  <div class="card" style="font-size:13px; line-height:1.9; color:var(--sub);">
+    <h2 id="aboutTitle" style="font-size:15px; color:var(--text); margin:0 0 8px;"></h2>
+    <p id="aboutBody1" style="margin:0 0 10px;"></p>
+    <p id="aboutBody2" style="margin:0;"></p>
+  </div>
+
+  <div class="card" style="font-size:13px; line-height:1.9; color:var(--sub);">
+    <h2 id="faqTitle" style="font-size:15px; color:var(--text); margin:0 0 10px;"></h2>
+    <p id="faq1Q" style="margin:0 0 4px; color:var(--text); font-weight:bold;"></p>
+    <p id="faq1A" style="margin:0 0 12px;"></p>
+    <p id="faq2Q" style="margin:0 0 4px; color:var(--text); font-weight:bold;"></p>
+    <p id="faq2A" style="margin:0;"></p>
+  </div>
+
   <p class="footer-links" id="footerLinks"></p>
+  <p style="text-align:center; font-size:11px; color:var(--sub); margin-top:4px;">
+    <a href="https://naginata-work.github.io/" style="color:var(--sub);" id="allToolsLink"></a> ・
+    <a href="https://naginata-work.github.io/privacy.html" style="color:var(--sub);" id="privacyLink"></a>
+  </p>
 </div>
 
 <script>
@@ -94,7 +112,15 @@
       copyBtn: '結果をコピー',
       copied: 'コピーしました!',
       shareText: (tip, total, per) => `チップ: ${tip} / 合計: ${total} / 1人あたり: ${per}`,
-      footerLinks: '他のツールも作っています → <a href="https://naginata-work.github.io/warikan-tool/" target="_blank" rel="noopener">割り勘計算機</a> / <a href="https://naginata-work.github.io/percent-calc/" target="_blank" rel="noopener">パーセント計算機</a>'
+      footerLinks: '他のツールも作っています → <a href="https://naginata-work.github.io/warikan-tool/" target="_blank" rel="noopener">割り勘計算機</a> / <a href="https://naginata-work.github.io/percent-calc/" target="_blank" rel="noopener">パーセント計算機</a>',
+      aboutTitle: '海外でのチップの目安について',
+      aboutBody1: '日本ではチップの習慣がありませんが、海外旅行先のレストランやカフェでは、会計にチップを上乗せするのが一般的なマナーとされている国が多くあります。慣れないうちは「結局いくら払えばいいのか」で戸惑いがちです。',
+      aboutBody2: 'このツールは10%・15%・18%・20%・25%というよく使われるチップ率をワンタップで選べるほか、自由な数値も入力できます。人数を入力すれば、チップ込みの合計金額を均等に割った1人あたりの金額もあわせて表示されます。',
+      faqTitle: 'よくある質問',
+      faq1Q: '国によってチップの相場は違う?',
+      faq1A: 'はい、大きく異なります。例えばアメリカのレストランでは18〜20%が一般的とされる一方、ヨーロッパの一部では5〜10%程度、あるいはサービス料が会計に含まれていてチップ不要な国もあります。訪問先の慣習を事前に確認することをおすすめします。',
+      faq2Q: 'warikan-tool(割り勘計算機)と何が違うの?',
+      faq2A: 'warikan-toolは参加者ごとに負担割合を変えられる、幹事向けの割り勘計算に特化しています。このツールはチップの計算に特化しており、全員が均等に払う前提のシンプルな計算をすばやく行いたい場合に向いています。',
     },
     en: {
       title: '💵 Tip Calculator',
@@ -108,7 +134,15 @@
       copyBtn: 'Copy result',
       copied: 'Copied!',
       shareText: (tip, total, per) => `Tip: ${tip} / Total: ${total} / Per person: ${per}`,
-      footerLinks: 'Also made these → <a href="https://naginata-work.github.io/warikan-tool/" target="_blank" rel="noopener">Bill Splitter</a> / <a href="https://naginata-work.github.io/percent-calc/" target="_blank" rel="noopener">Percentage Calculator</a>'
+      footerLinks: 'Also made these → <a href="https://naginata-work.github.io/warikan-tool/" target="_blank" rel="noopener">Bill Splitter</a> / <a href="https://naginata-work.github.io/percent-calc/" target="_blank" rel="noopener">Percentage Calculator</a>',
+      aboutTitle: 'Tipping etiquette while traveling',
+      aboutBody1: "Tipping norms vary a lot by country, and figuring out what to actually add to the bill can be confusing, especially somewhere with a different custom than you're used to.",
+      aboutBody2: "Pick a common tip percentage (10%, 15%, 18%, 20%, or 25%) with one tap, or type your own. Enter the number of people splitting the bill to see the per-person total, tip included, calculated evenly.",
+      faqTitle: 'FAQ',
+      faq1Q: 'Does the expected tip percentage vary by country?',
+      faq1A: "Significantly. US restaurants commonly expect 18-20%, while some places in Europe expect closer to 5-10%, and others include service in the bill with no tipping expected at all. It's worth checking local norms before you go.",
+      faq2Q: 'How is this different from the Bill Splitter tool?',
+      faq2A: "Bill Splitter is built for organizers who need to weight contributions differently per person. This tool is focused specifically on tipping — a quick, simple calculation assuming everyone pays an equal share.",
     }
   };
 
@@ -187,6 +221,18 @@
     document.getElementById('perPersonLabel').textContent = t().perPersonLabel;
     document.getElementById('copyBtn').textContent = t().copyBtn;
     document.getElementById('footerLinks').innerHTML = t().footerLinks;
+    document.getElementById('aboutTitle').textContent = t().aboutTitle;
+    document.getElementById('aboutBody1').textContent = t().aboutBody1;
+    document.getElementById('aboutBody2').textContent = t().aboutBody2;
+    document.getElementById('faqTitle').textContent = t().faqTitle;
+    document.getElementById('faq1Q').textContent = t().faq1Q;
+    document.getElementById('faq1A').textContent = t().faq1A;
+    document.getElementById('faq2Q').textContent = t().faq2Q;
+    document.getElementById('faq2A').textContent = t().faq2A;
+    document.getElementById('allToolsLink').textContent = lang === 'ja' ? '他のツール一覧' : 'All tools';
+    document.getElementById('allToolsLink').href = 'https://naginata-work.github.io/';
+    document.getElementById('privacyLink').textContent = lang === 'ja' ? 'プライバシーポリシー' : 'Privacy policy';
+    document.getElementById('privacyLink').href = 'https://naginata-work.github.io/privacy.html';
     calc();
   }
 
